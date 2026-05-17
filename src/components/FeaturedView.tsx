@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { prepareWithSegments, layoutWithLines } from '@chenglou/pretext'
 import galleryData from '../data/gallery.json'
 
@@ -46,6 +46,7 @@ const PretextLabel = ({ text, font, fontSize, lineHeight, letterSpacing }: {
 
 const FeaturedView = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const dragStartRef = useRef<number | null>(null)
   
   const featuredImages = (galleryData as GalleryItem[]).filter(item => item.isFeatured)
   const displayImages = featuredImages.length > 0 ? featuredImages : (galleryData as GalleryItem[]).slice(0, 3)
@@ -58,10 +59,38 @@ const FeaturedView = () => {
     setCurrentIndex((prev) => (prev - 1 + displayImages.length) % displayImages.length)
   }
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') prevImage()
+      if (e.key === 'ArrowRight') nextImage()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [displayImages.length])
+
+  const handleDragStart = (x: number) => {
+    dragStartRef.current = x
+  }
+
+  const handleDragEnd = (x: number) => {
+    if (dragStartRef.current === null) return
+    const deltaX = x - dragStartRef.current
+    const threshold = 50
+    if (deltaX > threshold) prevImage()
+    else if (deltaX < -threshold) nextImage()
+    dragStartRef.current = null
+  }
+
   const image = displayImages[currentIndex]
 
   return (
-    <div className="featured-view">
+    <div 
+      className="featured-view"
+      onMouseDown={(e) => handleDragStart(e.clientX)}
+      onMouseUp={(e) => handleDragEnd(e.clientX)}
+      onTouchStart={(e) => handleDragStart(e.touches[0].clientX)}
+      onTouchEnd={(e) => handleDragEnd(e.changedTouches[0].clientX)}
+    >
       <div key={image.id} className="featured-item active">
         <div className="featured-image-wrapper">
           <img 
@@ -69,6 +98,7 @@ const FeaturedView = () => {
             alt={image.displayName} 
             className="featured-image" 
             loading="lazy"
+            draggable={false}
           />
           <div className="featured-caption">
             <div className="caption-title">
@@ -91,11 +121,9 @@ const FeaturedView = () => {
           </div>
         </div>
       </div>
-      {/* Navigation functions available for next task */}
-      <div style={{ display: 'none' }}>
-        <button onClick={prevImage}>Prev</button>
-        <button onClick={nextImage}>Next</button>
-      </div>
+      
+      <div className="nav-edge prev" onClick={(e) => { e.stopPropagation(); prevImage(); }} />
+      <div className="nav-edge next" onClick={(e) => { e.stopPropagation(); nextImage(); }} />
     </div>
   )
 }
