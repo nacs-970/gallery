@@ -57,8 +57,13 @@ To support editing picture names from the UI:
 - Changes are persisted immediately or via a "Save" button to the local `gallery.json`.
 
 ### Styling Details
-- Background: Pure white or slightly off-white (#f9f9f9).
-- Text Color: High-contrast black or very dark grey.
+- **Default Theme: Dark Mode**
+  - Background: Black (#000000) or deep charcoal (#121212).
+  - Text Color: Off-white (#e0e0e0) or pure white.
+- **Theme Switcher:**
+  - A subtle toggle in the header/footer to switch between Light and Dark modes.
+  - Light Mode Background: Pure white (#ffffff).
+  - Light Mode Text: High-contrast black.
 - Hover states: Minimal (e.g., slight opacity change or zero change to keep it "static" and elegant).
 
 ## Data Flow
