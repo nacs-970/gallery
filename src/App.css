@@ -115,6 +115,31 @@
   opacity: 0.6;
 }
 
+.grid-label span {
+  cursor: text;
+  padding: 2px 0;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+
+.grid-label span:hover {
+  border-bottom-color: rgba(128, 128, 128, 0.3);
+}
+
+.grid-label-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--text-color);
+  color: var(--text-color);
+  font-family: inherit;
+  font-size: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  width: 100%;
+  padding: 2px 0;
+  outline: none;
+}
+
 /* Featured View Styles */
 .featured-view {
   max-width: 1000px;

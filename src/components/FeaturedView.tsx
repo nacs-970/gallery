@@ -16,10 +16,17 @@ const PretextLabel = ({ text, font, fontSize, lineHeight, letterSpacing }: {
   lineHeight: number,
   letterSpacing?: number
 }) => {
+  let lines: { text: string }[] | null = null
+
   try {
     const prepared = prepareWithSegments(text, `${fontSize}px ${font}`, { letterSpacing })
-    const { lines } = layoutWithLines(prepared, 1000, fontSize * lineHeight)
-    
+    const result = layoutWithLines(prepared, 1000, fontSize * lineHeight)
+    lines = result.lines
+  } catch {
+    // Fallback if Pretext fails (e.g. in environments without Intl.Segmenter)
+  }
+
+  if (lines) {
     return (
       <div style={{ fontFamily: font, fontSize: `${fontSize}px`, lineHeight: `${lineHeight}` }}>
         {lines.map((line, i) => (
@@ -27,14 +34,13 @@ const PretextLabel = ({ text, font, fontSize, lineHeight, letterSpacing }: {
         ))}
       </div>
     )
-  } catch (e) {
-    // Fallback if Pretext fails (e.g. in environments without Intl.Segmenter)
-    return (
-      <div style={{ fontFamily: font, fontSize: `${fontSize}px`, lineHeight: `${lineHeight}`, letterSpacing: letterSpacing ? `${letterSpacing}px` : 'normal' }}>
-        {text}
-      </div>
-    )
   }
+
+  return (
+    <div style={{ fontFamily: font, fontSize: `${fontSize}px`, lineHeight: `${lineHeight}`, letterSpacing: letterSpacing ? `${letterSpacing}px` : 'normal' }}>
+      {text}
+    </div>
+  )
 }
 
 const FeaturedView = () => {
