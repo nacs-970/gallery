@@ -106,24 +106,24 @@ const FeaturedView = () => {
             loading="lazy"
             draggable={false}
           />
-          <div className="featured-caption">
-            <div className="caption-title">
-              <PretextLabel 
-                text={image.displayName}
-                font="Times New Roman"
-                fontSize={48}
-                lineHeight={1.2}
-              />
-            </div>
-            <div className="caption-subtitle">
-              <PretextLabel 
-                text="FEATURED PROJECT"
-                font="Arial"
-                fontSize={12}
-                lineHeight={1.5}
-                letterSpacing={2}
-              />
-            </div>
+        </div>
+        <div className="featured-caption">
+          <div className="caption-title">
+            <PretextLabel 
+              text={image.displayName}
+              font="Times New Roman"
+              fontSize={48}
+              lineHeight={1.2}
+            />
+          </div>
+          <div className="caption-subtitle">
+            <PretextLabel 
+              text="FEATURED PROJECT"
+              font="Arial"
+              fontSize={12}
+              lineHeight={1.5}
+              letterSpacing={2}
+            />
           </div>
         </div>
       </div>
