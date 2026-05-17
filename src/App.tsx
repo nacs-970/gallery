@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './App.css'
+import GridView from './components/GridView'
 
 type Tab = 'featured' | 'all'
 type Theme = 'dark' | 'light'
@@ -46,7 +47,7 @@ function App() {
         )}
         {tab === 'all' && (
           <section className="view-all">
-            <p>All Works View (Placeholder)</p>
+            <GridView />
           </section>
         )}
       </main>
