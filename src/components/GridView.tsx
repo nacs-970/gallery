@@ -14,6 +14,7 @@ const GridView = () => {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editValue, setEditValue] = useState('')
   const [isSaving, setIsSaving] = useState(false)
+  const [expandedImage, setExpandedImage] = useState<string | null>(null)
 
   const handleEditClick = (image: ImageItem) => {
     if (isSaving) return
@@ -65,8 +66,14 @@ const GridView = () => {
     <div className="grid-view">
       {images.map((image) => (
         <div key={image.id} className="grid-item">
-          <div className="grid-image-container">
-            <img src={image.path} alt={image.displayName} className="grid-image" />
+          <div className="grid-image-container" onClick={() => setExpandedImage(image.path)}>
+            <img 
+              src={image.path} 
+              alt={image.displayName} 
+              className="grid-image" 
+              loading="lazy"
+              style={{ cursor: 'zoom-in' }}
+            />
           </div>
           <div className="grid-label">
             {editingId === image.id ? (
@@ -91,6 +98,14 @@ const GridView = () => {
           </div>
         </div>
       ))}
+      {expandedImage && (
+        <div className="lightbox-overlay" onClick={() => setExpandedImage(null)}>
+          <div className="lightbox-content">
+            <img src={expandedImage} alt="Expanded" />
+            <button className="lightbox-close" onClick={() => setExpandedImage(null)}>&times;</button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
