@@ -100,9 +100,18 @@ const GridView = () => {
       ))}
       {expandedImage && (
         <div className="lightbox-overlay" onClick={() => setExpandedImage(null)}>
-          <div className="lightbox-content">
-            <img src={expandedImage} alt="Expanded" />
-            <button className="lightbox-close" onClick={() => setExpandedImage(null)}>&times;</button>
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            <img 
+              src={expandedImage} 
+              alt={images.find(img => img.path === expandedImage)?.displayName || "Expanded Image"} 
+            />
+            <button 
+              className="lightbox-close" 
+              onClick={() => setExpandedImage(null)}
+              aria-label="Close image"
+            >
+              &times;
+            </button>
           </div>
         </div>
       )}
