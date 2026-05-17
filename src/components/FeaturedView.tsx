@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { prepareWithSegments, layoutWithLines } from '@chenglou/pretext'
 import galleryData from '../data/gallery.json'
 
@@ -9,6 +9,8 @@ interface GalleryItem {
   isFeatured: boolean
   path: string
 }
+
+const SWIPE_THRESHOLD = 50
 
 const PretextLabel = ({ text, font, fontSize, lineHeight, letterSpacing }: { 
   text: string, 
@@ -51,13 +53,13 @@ const FeaturedView = () => {
   const featuredImages = (galleryData as GalleryItem[]).filter(item => item.isFeatured)
   const displayImages = featuredImages.length > 0 ? featuredImages : (galleryData as GalleryItem[]).slice(0, 3)
 
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % displayImages.length)
-  }
+  }, [displayImages.length])
 
-  const prevImage = () => {
+  const prevImage = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + displayImages.length) % displayImages.length)
-  }
+  }, [displayImages.length])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -66,7 +68,7 @@ const FeaturedView = () => {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [displayImages.length])
+  }, [nextImage, prevImage])
 
   const handleDragStart = (x: number) => {
     dragStartRef.current = x
@@ -75,9 +77,12 @@ const FeaturedView = () => {
   const handleDragEnd = (x: number) => {
     if (dragStartRef.current === null) return
     const deltaX = x - dragStartRef.current
-    const threshold = 50
-    if (deltaX > threshold) prevImage()
-    else if (deltaX < -threshold) nextImage()
+    if (deltaX > SWIPE_THRESHOLD) prevImage()
+    else if (deltaX < -SWIPE_THRESHOLD) nextImage()
+    dragStartRef.current = null
+  }
+
+  const handleMouseLeave = () => {
     dragStartRef.current = null
   }
 
@@ -88,6 +93,7 @@ const FeaturedView = () => {
       className="featured-view"
       onMouseDown={(e) => handleDragStart(e.clientX)}
       onMouseUp={(e) => handleDragEnd(e.clientX)}
+      onMouseLeave={handleMouseLeave}
       onTouchStart={(e) => handleDragStart(e.touches[0].clientX)}
       onTouchEnd={(e) => handleDragEnd(e.changedTouches[0].clientX)}
     >
