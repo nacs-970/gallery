@@ -30,6 +30,13 @@ A script `scripts/sync-images.js` will:
 - **Sans-Serif (Labels/Metadata):** `Arial`, sans-serif.
 - **Implementation:** Pretext will handle the rendering of key labels and captions to ensure specific `letterSpacing` and `lineHeight` that matches the design inspiration.
 
+### 2. Metadata Persistence (Local Edit)
+To support editing picture names from the UI:
+- A small local API endpoint (implemented via Vite dev server middleware or a simple Node process) will accept `POST` requests.
+- When a user edits a name in the UI, the app sends the new metadata to this endpoint.
+- The endpoint updates the specific entry in `src/data/gallery.json` on disk.
+- **Note:** This is intended for local development/showcase use only.
+
 ## UI & Features
 ### Navigation
 - A minimal fixed header with two primary tabs: **Featured** and **All**.
@@ -43,6 +50,11 @@ A script `scripts/sync-images.js` will:
 - **Layout:** Clean grid.
 - **Constraint:** All thumbnails must maintain the same aspect ratio (e.g., 4:5) to ensure a uniform and "quiet" visual rhythm.
 - **Interaction:** Clicking an image opens a focused view (can reuse the "Featured" style or a simple lightbox).
+
+### Edit Mode
+- A subtle "Edit" button or double-click action on image labels/captions.
+- Inline text input to update the display name.
+- Changes are persisted immediately or via a "Save" button to the local `gallery.json`.
 
 ### Styling Details
 - Background: Pure white or slightly off-white (#f9f9f9).
