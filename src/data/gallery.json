@@ -1,0 +1,51 @@
+[
+  {
+    "id": "ballon.jpg",
+    "filename": "ballon.jpg",
+    "displayName": "ballon",
+    "isFeatured": false,
+    "path": "/images/ballon.jpg"
+  },
+  {
+    "id": "bw-temple.jpg",
+    "filename": "bw-temple.jpg",
+    "displayName": "bw-temple",
+    "isFeatured": false,
+    "path": "/images/bw-temple.jpg"
+  },
+  {
+    "id": "doi-pui.jpg",
+    "filename": "doi-pui.jpg",
+    "displayName": "doi-pui",
+    "isFeatured": false,
+    "path": "/images/doi-pui.jpg"
+  },
+  {
+    "id": "doi-pui_view.jpg",
+    "filename": "doi-pui_view.jpg",
+    "displayName": "doi-pui_view",
+    "isFeatured": false,
+    "path": "/images/doi-pui_view.jpg"
+  },
+  {
+    "id": "dream_doi-pui.jpg",
+    "filename": "dream_doi-pui.jpg",
+    "displayName": "dream_doi-pui",
+    "isFeatured": false,
+    "path": "/images/dream_doi-pui.jpg"
+  },
+  {
+    "id": "house-soft-light.jpg",
+    "filename": "house-soft-light.jpg",
+    "displayName": "house-soft-light",
+    "isFeatured": false,
+    "path": "/images/house-soft-light.jpg"
+  },
+  {
+    "id": "sunrise.jpg",
+    "filename": "sunrise.jpg",
+    "displayName": "sunrise",
+    "isFeatured": false,
+    "path": "/images/sunrise.jpg"
+  }
+]

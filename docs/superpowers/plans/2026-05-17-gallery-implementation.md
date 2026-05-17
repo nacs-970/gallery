@@ -55,10 +55,10 @@ git commit -m "chore: initial project scaffolding with vite and theme variables"
 ### Task 2: Image Sync Script
 
 **Files:**
-- Create: `scripts/sync-images.js`
+- Create: `scripts/sync-images.cjs`
 - Create: `src/data/gallery.json` (placeholder)
 
-- [ ] **Step 1: Create sync script**
+- [x] **Step 1: Create sync script**
 Write a Node script that reads the `images/` directory and creates a JSON array of image objects.
 
 ```javascript
@@ -66,7 +66,12 @@ const fs = require('fs');
 const path = require('path');
 
 const imagesDir = path.join(__dirname, '../images');
-const output = path.join(__dirname, '../src/data/gallery.json');
+const dataDir = path.join(__dirname, '../src/data');
+const output = path.join(dataDir, 'gallery.json');
+
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
 
 const files = fs.readdirSync(imagesDir)
   .filter(file => /\.(jpg|jpeg|png|webp)$/i.test(file));
@@ -83,14 +88,14 @@ fs.writeFileSync(output, JSON.stringify(gallery, null, 2));
 console.log(`Synced ${files.length} images to ${output}`);
 ```
 
-- [ ] **Step 2: Add sync command to package.json**
-Add `"sync": "node scripts/sync-images.js"` to scripts.
+- [x] **Step 2: Add sync command to package.json**
+Add `"sync": "node scripts/sync-images.cjs"` to scripts.
 
-- [ ] **Step 3: Run sync and commit**
+- [x] **Step 3: Run sync and commit**
 Run: `npm run sync`
 Expected: `src/data/gallery.json` created with image list.
 ```bash
-git add scripts/sync-images.js src/data/gallery.json package.json
+git add scripts/sync-images.cjs src/data/gallery.json package.json
 git commit -m "feat: add image sync script and manifest"
 ```
 
