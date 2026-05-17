@@ -47,8 +47,12 @@ const PretextLabel = ({ text, font, fontSize, lineHeight, letterSpacing }: {
 }
 
 const FeaturedView = () => {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const featuredImages = (galleryData as GalleryItem[]).filter(item => item.isFeatured)
+  const displayImages = featuredImages.length > 0 ? featuredImages : (galleryData as GalleryItem[]).slice(0, 3)
+
+  const [currentIndex, setCurrentIndex] = useState(() => Math.floor(Math.random() * displayImages.length))
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
+  const [isExiting, setIsExiting] = useState(false)
   const dragStartRef = useRef<number | null>(null)
 
   useEffect(() => {
@@ -56,17 +60,24 @@ const FeaturedView = () => {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
-  
-  const featuredImages = (galleryData as GalleryItem[]).filter(item => item.isFeatured)
-  const displayImages = featuredImages.length > 0 ? featuredImages : (galleryData as GalleryItem[]).slice(0, 3)
 
   const nextImage = useCallback(() => {
-    setCurrentIndex((prev) => (prev + 1) % displayImages.length)
-  }, [displayImages.length])
+    if (isExiting) return
+    setIsExiting(true)
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev + 1) % displayImages.length)
+      setIsExiting(false)
+    }, 100)
+  }, [displayImages.length, isExiting])
 
   const prevImage = useCallback(() => {
-    setCurrentIndex((prev) => (prev - 1 + displayImages.length) % displayImages.length)
-  }, [displayImages.length])
+    if (isExiting) return
+    setIsExiting(true)
+    setTimeout(() => {
+      setCurrentIndex((prev) => (prev - 1 + displayImages.length) % displayImages.length)
+      setIsExiting(false)
+    }, 100)
+  }, [displayImages.length, isExiting])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -104,7 +115,7 @@ const FeaturedView = () => {
       onTouchStart={(e) => handleDragStart(e.touches[0].clientX)}
       onTouchEnd={(e) => handleDragEnd(e.changedTouches[0].clientX)}
     >
-      <div key={image.id} className="featured-item active">
+      <div key={`${image.id}-${currentIndex}`} className="featured-item active">
         <div className="featured-image-wrapper">
           <img 
             src={image.path} 
@@ -119,17 +130,8 @@ const FeaturedView = () => {
             <PretextLabel 
               text={image.displayName}
               font="Times New Roman"
-              fontSize={isMobile ? 32 : 48}
+              fontSize={isMobile ? 20 : 24}
               lineHeight={1.2}
-            />
-          </div>
-          <div className="caption-subtitle">
-            <PretextLabel 
-              text="FEATURED PROJECT"
-              font="Arial"
-              fontSize={12}
-              lineHeight={1.5}
-              letterSpacing={2}
             />
           </div>
         </div>

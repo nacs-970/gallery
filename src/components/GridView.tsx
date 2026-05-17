@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import galleryData from '../data/gallery.json'
 
 interface ImageItem {
@@ -9,12 +9,63 @@ interface ImageItem {
   path: string
 }
 
-const GridView = () => {
+const SWIPE_THRESHOLD = 50
+
+const GridView = ({ isExiting }: { isExiting?: boolean }) => {
   const [images, setImages] = useState<ImageItem[]>(galleryData as ImageItem[])
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editValue, setEditValue] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [expandedImage, setExpandedImage] = useState<string | null>(null)
+  const dragStartRef = useRef<number | null>(null)
+
+  const nextImage = useCallback(() => {
+    if (!expandedImage) return
+    const currentIndex = images.findIndex(img => img.path === expandedImage)
+    const nextIndex = (currentIndex + 1) % images.length
+    setExpandedImage(images[nextIndex].path)
+  }, [expandedImage, images])
+
+  const prevImage = useCallback(() => {
+    if (!expandedImage) return
+    const currentIndex = images.findIndex(img => img.path === expandedImage)
+    const prevIndex = (currentIndex - 1 + images.length) % images.length
+    setExpandedImage(images[prevIndex].path)
+  }, [expandedImage, images])
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!expandedImage) return
+      if (e.key === 'Escape') {
+        setExpandedImage(null)
+      } else if (e.key === 'ArrowRight') {
+        nextImage()
+      } else if (e.key === 'ArrowLeft') {
+        prevImage()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [expandedImage, nextImage, prevImage])
+
+  const handleDragStart = (x: number) => {
+    dragStartRef.current = x
+  }
+
+  const handleDragEnd = (x: number) => {
+    if (dragStartRef.current === null) return
+    const deltaX = x - dragStartRef.current
+    if (deltaX > SWIPE_THRESHOLD) prevImage()
+    else if (deltaX < -SWIPE_THRESHOLD) nextImage()
+    dragStartRef.current = null
+  }
+
+  const handleMouseLeave = () => {
+    dragStartRef.current = null
+  }
 
   const handleEditClick = (image: ImageItem) => {
     if (isSaving) return
@@ -64,18 +115,26 @@ const GridView = () => {
 
   return (
     <div className="grid-view">
-      {images.map((image) => (
-        <div key={image.id} className="grid-item">
+      {images.map((image, index) => (
+        <div 
+          key={image.id} 
+          className={`grid-item ${isExiting ? 'exiting' : ''}`}
+          style={{ 
+            animationDelay: isExiting 
+              ? `${(images.length - 1 - index) * 0.03}s` 
+              : `${index * 0.03}s` 
+          }}
+        >
           <div className="grid-image-container" onClick={() => setExpandedImage(image.path)}>
             <img 
               src={image.path} 
               alt={image.displayName} 
               className="grid-image" 
               loading="lazy"
-              style={{ cursor: 'zoom-in' }}
+              style={{ cursor: 'pointer' }}
             />
           </div>
-          <div className="grid-label">
+          <div className={`grid-label ${editingId === image.id ? 'is-editing' : ''}`}>
             {editingId === image.id ? (
               <input
                 autoFocus
@@ -99,11 +158,20 @@ const GridView = () => {
         </div>
       ))}
       {expandedImage && (
-        <div className="lightbox-overlay" onClick={() => setExpandedImage(null)}>
+        <div 
+          className="lightbox-overlay" 
+          onClick={() => setExpandedImage(null)}
+          onMouseDown={(e) => handleDragStart(e.clientX)}
+          onMouseUp={(e) => handleDragEnd(e.clientX)}
+          onMouseLeave={handleMouseLeave}
+          onTouchStart={(e) => handleDragStart(e.touches[0].clientX)}
+          onTouchEnd={(e) => handleDragEnd(e.changedTouches[0].clientX)}
+        >
           <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
             <img 
               src={expandedImage} 
               alt={images.find(img => img.path === expandedImage)?.displayName || "Expanded Image"} 
+              draggable={false}
             />
             <button 
               className="lightbox-close" 
@@ -113,6 +181,8 @@ const GridView = () => {
               &times;
             </button>
           </div>
+          <div className="nav-edge prev" onClick={(e) => { e.stopPropagation(); prevImage(); }} />
+          <div className="nav-edge next" onClick={(e) => { e.stopPropagation(); nextImage(); }} />
         </div>
       )}
     </div>

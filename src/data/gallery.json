@@ -1,5 +1,40 @@
 [
   {
+    "id": "1000103365.jpg",
+    "filename": "1000103365.jpg",
+    "displayName": "1000103365",
+    "isFeatured": false,
+    "path": "/images/1000103365.jpg"
+  },
+  {
+    "id": "DSC03486.jpg",
+    "filename": "DSC03486.jpg",
+    "displayName": "DSC03486",
+    "isFeatured": false,
+    "path": "/images/DSC03486.jpg"
+  },
+  {
+    "id": "DSCF0846.png",
+    "filename": "DSCF0846.png",
+    "displayName": "DSCF0846",
+    "isFeatured": false,
+    "path": "/images/DSCF0846.png"
+  },
+  {
+    "id": "DSCF1015.png",
+    "filename": "DSCF1015.png",
+    "displayName": "DSCF1015",
+    "isFeatured": false,
+    "path": "/images/DSCF1015.png"
+  },
+  {
+    "id": "DSCF1042.jpg",
+    "filename": "DSCF1042.jpg",
+    "displayName": "DSCF1042",
+    "isFeatured": false,
+    "path": "/images/DSCF1042.jpg"
+  },
+  {
     "id": "ballon.jpg",
     "filename": "ballon.jpg",
     "displayName": "ballon",
@@ -17,7 +52,7 @@
     "id": "doi-pui.jpg",
     "filename": "doi-pui.jpg",
     "displayName": "doi-pui",
-    "isFeatured": false,
+    "isFeatured": true,
     "path": "/images/doi-pui.jpg"
   },
   {
@@ -31,7 +66,7 @@
     "id": "dream_doi-pui.jpg",
     "filename": "dream_doi-pui.jpg",
     "displayName": "dream_doi-pui",
-    "isFeatured": false,
+    "isFeatured": true,
     "path": "/images/dream_doi-pui.jpg"
   },
   {
