@@ -9,7 +9,7 @@ const path = require('path');
 function syncImages() {
   try {
     const rootDir = process.cwd();
-    const imagesDir = path.resolve(rootDir, 'images');
+    const imagesDir = path.resolve(rootDir, 'public/images');
     const dataDir = path.resolve(rootDir, 'src/data');
     const outputFile = path.join(dataDir, 'gallery.json');
 

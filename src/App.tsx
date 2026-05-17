@@ -72,7 +72,7 @@ function App() {
       <main className="main">
         {activeTab === 'featured' && (
           <section className={`view-featured ${isExiting ? 'exiting' : ''}`}>
-            <FeaturedView />
+            <FeaturedView isExiting={isExiting} />
           </section>
         )}
         {activeTab === 'all' && (

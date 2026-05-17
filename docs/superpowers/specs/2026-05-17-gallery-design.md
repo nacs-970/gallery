@@ -20,7 +20,7 @@ Build a minimal, clean, and elegant local gallery website to showcase high-resol
 ## Architecture
 ### 1. Image Discovery (Static Manifest)
 A script `scripts/sync-images.js` will:
-- Scan the `images/` directory.
+- Scan the `public/images/` directory.
 - Extract file names and paths.
 - Generate `src/data/gallery.json`.
 - (Future-proofing) Allow manual editing of `gallery.json` to add specific captions or mark images as "featured".
@@ -67,14 +67,14 @@ To support editing picture names from the UI:
 - Hover states: Minimal (e.g., slight opacity change or zero change to keep it "static" and elegant).
 
 ## Data Flow
-1. `npm run sync` scans `images/`.
+1. `npm run sync` scans `public/images/`.
 2. `gallery.json` is updated.
 3. React app imports `gallery.json`.
 4. `Gallery` component maps through the data.
 5. `Pretext` components render the typographic elements.
 
 ## Success Criteria
-- [ ] Website loads and displays images from `images/` folder automatically after sync.
+- [ ] Website loads and displays images from `public/images/` folder automatically after sync.
 - [ ] Grid thumbnails are perfectly uniform in size/ratio.
 - [ ] Typography matches the "Times New Roman + Arial" requirement.
 - [ ] Zero layout shifting during image load.

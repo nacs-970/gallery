@@ -15,29 +15,6 @@ export default function galleryApiPlugin(): Plugin {
     name: 'gallery-api',
     configureServer(server) {
       server.middlewares.use(async (req, res, _next) => {
-        if (req.url?.startsWith('/images/')) {
-          const url = new URL(req.url, 'http://localhost');
-          const filePath = path.join(process.cwd(), url.pathname);
-          try {
-            const content = await fs.readFile(filePath);
-            const ext = path.extname(filePath).toLowerCase();
-            const mimeTypes: Record<string, string> = {
-              '.jpg': 'image/jpeg',
-              '.jpeg': 'image/jpeg',
-              '.png': 'image/png',
-              '.webp': 'image/webp',
-              '.svg': 'image/svg+xml'
-            };
-            res.setHeader('Content-Type', mimeTypes[ext] || 'application/octet-stream');
-            res.end(content);
-            return;
-          } catch {
-            res.statusCode = 404;
-            res.end();
-            return;
-          }
-        }
-
         if (req.url === '/api/save-metadata' && req.method === 'POST') {
           let body = '';
           const MAX_BODY_SIZE = 1024 * 1024; // 1MB

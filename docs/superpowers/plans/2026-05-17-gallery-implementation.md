@@ -4,7 +4,7 @@
 
 **Goal:** Build a minimal, elegant, high-res local gallery using React, Pretext, and a static JSON manifest.
 
-**Architecture:** A Vite-based React app that displays images from an `images/` folder via a generated `gallery.json` manifest. Features include Featured/All tabs, uniform thumbnail ratios, metadata editing, and a Dark/Light mode toggle.
+**Architecture:** A Vite-based React app that displays images from an `public/images/` folder via a generated `gallery.json` manifest. Features include Featured/All tabs, uniform thumbnail ratios, metadata editing, and a Dark/Light mode toggle.
 
 **Tech Stack:** React (Vite), Pretext, Vanilla CSS, Node.js (for sync script and local API).
 
@@ -59,7 +59,7 @@ git commit -m "chore: initial project scaffolding with vite and theme variables"
 - Create: `src/data/gallery.json` (placeholder)
 
 - [x] **Step 1: Create sync script**
-Write a Node script that reads the `images/` directory and creates a JSON array of image objects.
+Write a Node script that reads the `public/images/` directory and creates a JSON array of image objects.
 
 ```javascript
 const fs = require('fs');

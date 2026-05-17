@@ -46,14 +46,16 @@ const PretextLabel = ({ text, font, fontSize, lineHeight, letterSpacing }: {
   )
 }
 
-const FeaturedView = () => {
+const FeaturedView = ({ isExiting: isTabExiting }: { isExiting?: boolean }) => {
   const featuredImages = (galleryData as GalleryItem[]).filter(item => item.isFeatured)
   const displayImages = featuredImages.length > 0 ? featuredImages : (galleryData as GalleryItem[]).slice(0, 3)
 
   const [currentIndex, setCurrentIndex] = useState(() => Math.floor(Math.random() * displayImages.length))
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
-  const [isExiting, setIsExiting] = useState(false)
+  const [isInternalExiting, setIsInternalExiting] = useState(false)
   const dragStartRef = useRef<number | null>(null)
+
+  const isExiting = isTabExiting || isInternalExiting;
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768)
@@ -63,19 +65,19 @@ const FeaturedView = () => {
 
   const nextImage = useCallback(() => {
     if (isExiting) return
-    setIsExiting(true)
+    setIsInternalExiting(true)
     setTimeout(() => {
       setCurrentIndex((prev) => (prev + 1) % displayImages.length)
-      setIsExiting(false)
+      setIsInternalExiting(false)
     }, 100)
   }, [displayImages.length, isExiting])
 
   const prevImage = useCallback(() => {
     if (isExiting) return
-    setIsExiting(true)
+    setIsInternalExiting(true)
     setTimeout(() => {
       setCurrentIndex((prev) => (prev - 1 + displayImages.length) % displayImages.length)
-      setIsExiting(false)
+      setIsInternalExiting(false)
     }, 100)
   }, [displayImages.length, isExiting])
 
@@ -115,7 +117,7 @@ const FeaturedView = () => {
       onTouchStart={(e) => handleDragStart(e.touches[0].clientX)}
       onTouchEnd={(e) => handleDragEnd(e.changedTouches[0].clientX)}
     >
-      <div key={`${image.id}-${currentIndex}`} className="featured-item active">
+      <div key={`${image.id}-${currentIndex}`} className={`featured-item active ${isExiting ? 'exiting' : ''}`}>
         <div className="featured-image-wrapper">
           <img 
             src={image.path} 
