@@ -13,18 +13,28 @@ const GridView = () => {
   const [images, setImages] = useState<ImageItem[]>(galleryData as ImageItem[])
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editValue, setEditValue] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
 
   const handleEditClick = (image: ImageItem) => {
+    if (isSaving) return
     setEditingId(image.id)
     setEditValue(image.displayName)
   }
 
   const handleSave = async (id: string) => {
+    if (isSaving) return
     if (!editValue.trim()) {
       setEditingId(null)
       return
     }
 
+    const originalImage = images.find(img => img.id === id)
+    if (originalImage && originalImage.displayName === editValue) {
+      setEditingId(null)
+      return
+    }
+
+    setIsSaving(true)
     try {
       const response = await fetch('/api/save-metadata', {
         method: 'POST',
@@ -38,10 +48,15 @@ const GridView = () => {
         setImages(prev =>
           prev.map(img => (img.id === id ? { ...img, displayName: editValue } : img))
         )
+      } else {
+        const errorData = await response.json().catch(() => ({}))
+        alert(`Failed to save: ${errorData.error || 'Unknown error'}`)
       }
     } catch (error) {
       console.error('Failed to save metadata:', error)
+      alert('Failed to save metadata. Please check your connection.')
     } finally {
+      setIsSaving(false)
       setEditingId(null)
     }
   }
@@ -57,6 +72,7 @@ const GridView = () => {
             {editingId === image.id ? (
               <input
                 autoFocus
+                disabled={isSaving}
                 className="grid-label-input"
                 value={editValue}
                 onChange={(e) => setEditValue(e.target.value)}
@@ -64,7 +80,13 @@ const GridView = () => {
                 onKeyDown={(e) => e.key === 'Enter' && handleSave(image.id)}
               />
             ) : (
-              <span onClick={() => handleEditClick(image)}>{image.displayName}</span>
+              <span 
+                onClick={() => handleEditClick(image)}
+                style={{ cursor: isSaving ? 'wait' : 'pointer' }}
+                title="Click to edit"
+              >
+                {image.displayName}
+              </span>
             )}
           </div>
         </div>

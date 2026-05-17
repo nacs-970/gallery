@@ -1,5 +1,5 @@
 import type { Plugin } from 'vite';
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
 interface GalleryItem {
@@ -17,28 +17,57 @@ export default function galleryApiPlugin(): Plugin {
       server.middlewares.use((req, res, _next) => {
         if (req.url === '/api/save-metadata' && req.method === 'POST') {
           let body = '';
+          const MAX_BODY_SIZE = 1024 * 1024; // 1MB
+
           req.on('data', chunk => {
             body += chunk.toString();
+            if (body.length > MAX_BODY_SIZE) {
+              res.statusCode = 413;
+              res.end(JSON.stringify({ error: 'Payload too large' }));
+              req.destroy();
+            }
           });
-          req.on('end', () => {
+
+          req.on('end', async () => {
+            if (res.writableEnded) return;
+
             try {
-              const { id, displayName } = JSON.parse(body);
+              let parsedBody;
+              try {
+                parsedBody = JSON.parse(body);
+              } catch {
+                res.statusCode = 400;
+                res.end(JSON.stringify({ error: 'Invalid JSON' }));
+                return;
+              }
+
+              const { id, displayName } = parsedBody;
+              if (!id || typeof displayName !== 'string') {
+                res.statusCode = 400;
+                res.end(JSON.stringify({ error: 'Missing id or displayName' }));
+                return;
+              }
+
               const galleryPath = path.resolve(process.cwd(), 'src/data/gallery.json');
-              const galleryData: GalleryItem[] = JSON.parse(fs.readFileSync(galleryPath, 'utf-8'));
+              const fileContent = await fs.readFile(galleryPath, 'utf-8');
+              const galleryData: GalleryItem[] = JSON.parse(fileContent);
               
               const index = galleryData.findIndex(item => item.id === id);
               if (index !== -1) {
                 galleryData[index].displayName = displayName;
-                fs.writeFileSync(galleryPath, JSON.stringify(galleryData, null, 2));
+                await fs.writeFile(galleryPath, JSON.stringify(galleryData, null, 2));
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify({ success: true }));
               } else {
                 res.statusCode = 404;
+                res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify({ error: 'Image not found' }));
               }
-            } catch {
+            } catch (error) {
+              console.error('API Error:', error);
               res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify({ error: 'Failed to update metadata' }));
             }
           });
