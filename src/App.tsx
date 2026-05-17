@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import GridView from './components/GridView'
+import FeaturedView from './components/FeaturedView'
 
 type Tab = 'featured' | 'all'
 type Theme = 'dark' | 'light'
@@ -42,7 +43,7 @@ function App() {
       <main className="main">
         {tab === 'featured' && (
           <section className="view-featured">
-            <p>Featured Works View (Placeholder)</p>
+            <FeaturedView />
           </section>
         )}
         {tab === 'all' && (
