@@ -3,6 +3,8 @@
   --text-color: #e0e0e0;
   --font-serif: "Times New Roman", serif;
   --font-sans: "Arial", sans-serif;
+  --header-height: 60px;
+  --main-offset: 100px;
 }
 
 [data-theme='light'] {

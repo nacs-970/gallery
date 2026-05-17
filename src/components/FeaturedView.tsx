@@ -48,7 +48,14 @@ const PretextLabel = ({ text, font, fontSize, lineHeight, letterSpacing }: {
 
 const FeaturedView = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768)
   const dragStartRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
   
   const featuredImages = (galleryData as GalleryItem[]).filter(item => item.isFeatured)
   const displayImages = featuredImages.length > 0 ? featuredImages : (galleryData as GalleryItem[]).slice(0, 3)
@@ -112,7 +119,7 @@ const FeaturedView = () => {
             <PretextLabel 
               text={image.displayName}
               font="Times New Roman"
-              fontSize={48}
+              fontSize={isMobile ? 32 : 48}
               lineHeight={1.2}
             />
           </div>

@@ -3,7 +3,7 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: var(--header-height);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -71,7 +71,7 @@
 }
 
 .main {
-  margin-top: 100px;
+  margin-top: var(--main-offset);
   padding: 0 40px;
   font-family: var(--font-serif);
 }
@@ -143,7 +143,7 @@
 /* Featured View Styles */
 .featured-view {
   position: relative;
-  height: calc(100vh - 100px); /* Account for header */
+  height: calc(100vh - var(--main-offset)); /* Account for header offset */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -223,7 +223,6 @@
   .featured-caption {
     position: static;
     margin-top: 20px;
-    text-align: left !important;
   }
 
   .grid-view {
