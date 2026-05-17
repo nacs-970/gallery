@@ -1,0 +1,19 @@
+:root {
+  --bg-color: #000000;
+  --text-color: #e0e0e0;
+  --font-serif: "Times New Roman", serif;
+  --font-sans: "Arial", sans-serif;
+}
+
+[data-theme='light'] {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-sans);
+  margin: 0;
+  transition: background-color 0.3s, color 0.3s;
+}
